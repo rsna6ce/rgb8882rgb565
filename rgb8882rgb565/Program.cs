@@ -42,9 +42,9 @@ namespace ConsoleApplication1
                     Console.WriteLine("ERROR: invalid format. RGB format is supported. " + filename);
                     return;
                 }
-                string filenameWithoutExt = Path.ChangeExtension(filename, null);
+                string filenameWithoutPathAndExt = Path.ChangeExtension(Path.GetFileName(filename), null);
                 string output_h = "";
-                printLine(ref output_h, "const uint16_t " + filenameWithoutExt + "[] = {\n");
+                printLine(ref output_h, "const uint16_t " + filenameWithoutPathAndExt + "[] = { /* " + image.Width.ToString() + "x" + image.Height.ToString() + " */\n");
                 int col = 0;
                 for (int y = 0; y < image.Height; y++)
                 {
@@ -63,7 +63,7 @@ namespace ConsoleApplication1
                     }
                 }
                 printLine(ref output_h, "};\n");
-                using (StreamWriter sw = new StreamWriter(filenameWithoutExt + ".h", true))
+                using (StreamWriter sw = new StreamWriter(Path.ChangeExtension(filename, null) + ".h", true))
                 {
                     sw.Write(output_h);
                 }
