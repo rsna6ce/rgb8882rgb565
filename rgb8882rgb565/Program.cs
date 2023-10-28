@@ -12,6 +12,12 @@ namespace ConsoleApplication1
 {
     class Program
     {
+        static void printLine(ref string lines, string newline)
+        {
+            lines = lines + newline;
+            //Console.Write(newline);
+        }
+        
         static void Main(string[] args)
         {
             if (args.Count() == 0)
@@ -36,7 +42,9 @@ namespace ConsoleApplication1
                     Console.WriteLine("ERROR: invalid format. RGB format is supported. " + filename);
                     return;
                 }
-                Console.WriteLine("{");
+                string filenameWithoutExt = Path.ChangeExtension(filename, null);
+                string output_h = "";
+                printLine(ref output_h, "const uint16_t " + filenameWithoutExt + "[] = {\n");
                 int col = 0;
                 for (int y = 0; y < image.Height; y++)
                 {
@@ -47,14 +55,18 @@ namespace ConsoleApplication1
                         ushort g6 = (ushort)(rgb.G >> 2);
                         ushort b5 = (ushort)(rgb.B >> 3);
                         ushort rgb565 = (ushort)((ushort)(r5 << 11) | (ushort)(g6 << 5) | (ushort)(b5 << 0) );
-                        Console.Write("0x" + rgb565.ToString("x4") + ",");
+                        printLine(ref output_h, "0x" + rgb565.ToString("x4") + ",");
                         if (++col % 8 == 0)
                         {
-                            Console.WriteLine("");
+                            printLine(ref output_h, "\n");
                         } 
                     }
                 }
-                Console.WriteLine("};");
+                printLine(ref output_h, "};\n");
+                using (StreamWriter sw = new StreamWriter(filenameWithoutExt + ".h", true))
+                {
+                    sw.Write(output_h);
+                }
             }
             catch
             {
