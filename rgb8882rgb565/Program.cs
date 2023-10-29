@@ -44,7 +44,9 @@ namespace ConsoleApplication1
                 }
                 string filenameWithoutPathAndExt = Path.ChangeExtension(Path.GetFileName(filename), null);
                 string output_h = "";
-                printLine(ref output_h, "const uint16_t " + filenameWithoutPathAndExt + "[] = { /* " + image.Width.ToString() + "x" + image.Height.ToString() + " */\n");
+                printLine(ref output_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_width  = " + image.Width.ToString() +  ";\n");
+                printLine(ref output_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_height = " + image.Height.ToString() + ";\n");
+                printLine(ref output_h, "const uint16_t bmp565_" + filenameWithoutPathAndExt + "_pixels[] = {\n");
                 int col = 0;
                 for (int y = 0; y < image.Height; y++)
                 {
@@ -63,7 +65,7 @@ namespace ConsoleApplication1
                     }
                 }
                 printLine(ref output_h, "};\n");
-                using (StreamWriter sw = new StreamWriter(Path.ChangeExtension(filename, null) + ".h", true))
+                using (StreamWriter sw = new StreamWriter(Path.ChangeExtension(filename, null) + ".h", false))
                 {
                     sw.Write(output_h);
                 }
