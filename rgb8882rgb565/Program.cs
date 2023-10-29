@@ -43,10 +43,17 @@ namespace ConsoleApplication1
                     return;
                 }
                 string filenameWithoutPathAndExt = Path.ChangeExtension(Path.GetFileName(filename), null);
-                string output_h = "";
-                printLine(ref output_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_width  = " + image.Width.ToString() +  ";\n");
-                printLine(ref output_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_height = " + image.Height.ToString() + ";\n");
-                printLine(ref output_h, "const uint16_t bmp565_" + filenameWithoutPathAndExt + "_pixels[] = {\n");
+
+                string output_rgb_h = "";
+                printLine(ref output_rgb_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_width  = " + image.Width.ToString() +  ";\n");
+                printLine(ref output_rgb_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_height = " + image.Height.ToString() + ";\n");
+                printLine(ref output_rgb_h, "const uint16_t bmp565_" + filenameWithoutPathAndExt + "_pixels[] = {\n");
+
+                string output_bgr_h = "";
+                printLine(ref output_bgr_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_width  = " + image.Width.ToString() + ";\n");
+                printLine(ref output_bgr_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_height = " + image.Height.ToString() + ";\n");
+                printLine(ref output_bgr_h, "const uint16_t bmp565_" + filenameWithoutPathAndExt + "_pixels[] = {\n");
+
                 int col = 0;
                 for (int y = 0; y < image.Height; y++)
                 {
@@ -56,18 +63,29 @@ namespace ConsoleApplication1
                         ushort r5 = (ushort)(rgb.R >> 3);
                         ushort g6 = (ushort)(rgb.G >> 2);
                         ushort b5 = (ushort)(rgb.B >> 3);
+
                         ushort rgb565 = (ushort)((ushort)(r5 << 11) | (ushort)(g6 << 5) | (ushort)(b5 << 0) );
-                        printLine(ref output_h, "0x" + rgb565.ToString("x4") + ",");
+                        printLine(ref output_rgb_h, "0x" + rgb565.ToString("x4") + ",");
+
+                        ushort bgr565 = (ushort)((ushort)(b5 << 11) | (ushort)(g6 << 5) | (ushort)(r5 << 0));
+                        printLine(ref output_bgr_h, "0x" + bgr565.ToString("x4") + ",");
+
                         if (++col % 8 == 0)
                         {
-                            printLine(ref output_h, "\n");
+                            printLine(ref output_rgb_h, "\n");
+                            printLine(ref output_bgr_h, "\n");
                         } 
                     }
                 }
-                printLine(ref output_h, "};\n");
-                using (StreamWriter sw = new StreamWriter(Path.ChangeExtension(filename, null) + ".h", false))
+                printLine(ref output_rgb_h, "};\n");
+                printLine(ref output_bgr_h, "};\n");
+                using (StreamWriter sw = new StreamWriter(Path.ChangeExtension(filename, null) + "_rgb.h", false))
                 {
-                    sw.Write(output_h);
+                    sw.Write(output_rgb_h);
+                }
+                using (StreamWriter sw = new StreamWriter(Path.ChangeExtension(filename, null) + "_bgr.h", false))
+                {
+                    sw.Write(output_bgr_h);
                 }
             }
             catch
