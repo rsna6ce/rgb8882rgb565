@@ -44,12 +44,12 @@ namespace ConsoleApplication1
                 }
                 string filenameWithoutPathAndExt = Path.ChangeExtension(Path.GetFileName(filename), null);
 
-                string output_rgb_h = "";
+                string output_rgb_h = "#pragma once\n";
                 printLine(ref output_rgb_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_width  = " + image.Width.ToString() +  ";\n");
                 printLine(ref output_rgb_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_height = " + image.Height.ToString() + ";\n");
                 printLine(ref output_rgb_h, "const uint16_t bmp565_" + filenameWithoutPathAndExt + "_pixels[] = {\n");
 
-                string output_bgr_h = "";
+                string output_bgr_h = "#pragma once\n";
                 printLine(ref output_bgr_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_width  = " + image.Width.ToString() + ";\n");
                 printLine(ref output_bgr_h, "const uint32_t bmp565_" + filenameWithoutPathAndExt + "_height = " + image.Height.ToString() + ";\n");
                 printLine(ref output_bgr_h, "const uint16_t bmp565_" + filenameWithoutPathAndExt + "_pixels[] = {\n");
